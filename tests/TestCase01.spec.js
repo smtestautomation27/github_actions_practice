@@ -13,6 +13,22 @@ test.describe('Test Case 01', () => {
         await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
     });
 
+    test('Check the add to cart functionality', async ({ page }) => {
+        await page.getByPlaceholder('Username').fill('standard_user');
+        await page.getByPlaceholder('Password').fill('secret_sauce');
+        await page.getByRole('button', { name: 'Login' }).click();
+        await page.locator('id=add-to-cart-sauce-labs-backpack').click();
+        await page.locator('data-test=shopping-cart-link').click();
+        await page.locator('id=checkout').click();
+        await page.getByPlaceholder('First Name').fill('John');
+        await page.getByPlaceholder('Last Name').fill('Doe');
+        await page.getByPlaceholder('Zip/Postal Code').fill('12345');
+        await page.locator('id=continue').click();
+        await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html');
+        await page.locator('id=finish').click();
+        await expect(page.locator('data-test=complete-header')).toHaveText('Thank you for your order!');
+    });
+
     test('Check the logout functionality', async ({ page }) => {
         await page.getByPlaceholder('Username').fill('standard_user');
         await page.getByPlaceholder('Password').fill('secret_sauce');
